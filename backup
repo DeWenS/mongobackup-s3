@@ -33,6 +33,6 @@ else
   FILE=$1
 
   aws s3api get-object --bucket $S3BUCKET --key $FILE /backup/$FILE
-  tar zxf /backup/$FILE -C /dump
+  tar zxf /backup/$FILE -C /backup
   mongorestore -h $MONGO_PORT_27017_TCP_ADDR --port $MONGO_PORT_27017_TCP_PORT -u $MONGO_USERNAME -p $MONGO_PASSWORD dump/
 fi
