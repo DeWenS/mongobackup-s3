@@ -16,12 +16,16 @@ if [ "$1" == "backup" ]; then
   echo "Starting backup..."
 
   DATE=$(date +%Y%m%d_%H%M%S)
-  FILE='/backup/backup-$date.tar.gz'
+  FILENAME='/backup/backup-$date.tar.gz'
 
   mongodump -h $MONGO_PORT_27017_TCP_ADDR --port $MONGO_PORT_27017_TCP_PORT -u $MONGO_USERNAME -p $MONGO_PASSWORD
-  tar zcf $FILE dump/
-  aws s3api put-object --bucket $S3BUCKET --key $DATE.tar.gz --body $FILE
-
+  tar zc dump/ | split split -d -b 1024m - $FILENAME
+  cd /backup
+  for FILE in $FILENAME
+  do
+  	echo "Uploading $FILE"
+    aws s3api put-object --bucket $S3BUCKET --key $FILE --body $FILE
+  done
 
 elif [ "$1" == "list" ]; then
 	echo "Listing backups..."
