@@ -21,6 +21,7 @@ if [ "$1" == "backup" ]; then
   mongodump -h $MONGO_PORT_27017_TCP_ADDR --port $MONGO_PORT_27017_TCP_PORT -u $MONGO_USERNAME -p $MONGO_PASSWORD
   tar zc dump/ | split split -d -b 1024m - $FILENAME
   cd /backup
+  FILENAME+='*'
   for FILE in $FILENAME
   do
   	echo "Uploading $FILE"
