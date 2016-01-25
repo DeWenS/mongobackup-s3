@@ -16,16 +16,13 @@ if [ "$1" == "backup" ]; then
   echo "Starting backup..."
 
   DATE=$(date +%Y%m%d_%H%M%S)
-  FILENAME='backup-$date.tar.gz'
+  FILENAME="backup-$DATE.tar.gz"
 
   mongodump -h $MONGO_PORT_27017_TCP_ADDR --port $MONGO_PORT_27017_TCP_PORT -u $MONGO_USERNAME -p $MONGO_PASSWORD
   echo "Backup finished"
-  ls -al dump
-  tar zc dump/ | split -d -b 1024m - /backup/$FILENAME
-  ls -al /backup
+  tar zc dump/ | split -d -b 1G - /backup/$FILENAME
   echo "Tar finished"
   cd /backup
-  ls .
   FILENAME+='*'
   for FILE in $FILENAME
   do
